@@ -317,12 +317,15 @@ String query = '''
  static Future<List<categories>> fetchLabPackagesparent({required int catid}) async {
     final db = await DBHelper.instance.db;
 
-    final rows = await db.rawQuery('''
-      SELECT  cat_nam, cat_image, cat_id
-      FROM category
-      WHERE par_cod = 0
+    // final rows = await db.rawQuery('''
+    //   SELECT  cat_nam, cat_image, cat_id
+    //   FROM category
+    //   WHERE par_cod = 0
+    // ''');
+  final rows = await db.rawQuery('''
+      SELECT  organ_name, pic, id
+      FROM organs
     ''');
-
     Color _toColor(String s) {
       s = s.trim();
       if (s.startsWith('0x')) return Color(int.parse(s));
@@ -352,9 +355,9 @@ final img = _assetOrDefault((r['cat_image'] ?? '').toString());
     return categories(
       c1,
       c2,
-      (r['cat_nam'] ?? '').toString(),
+      (r['organ_name'] ?? '').toString(),
       img.toString(),
-      r['cat_id'] as int,0,0,0,
+      r['id'] as int,0,0,0,
     );
 
 
@@ -365,8 +368,12 @@ final img = _assetOrDefault((r['cat_image'] ?? '').toString());
 static Future<int> fetchnooftest({required int catid}) async {
   final db = await DBHelper.instance.db;
 
-  final result = await db.rawQuery(
-    'SELECT COUNT(child_product_id) as cnt FROM package_test WHERE product_id = ?',
+  // final result = await db.rawQuery(
+  //   'SELECT COUNT(child_product_id) as cnt FROM package_test WHERE product_id = ?',
+  //   [catid],
+  // );
+   final result = await db.rawQuery(
+    'SELECT COUNT(test_id) as cnt FROM organ_test WHERE organ_id = ?',
     [catid],
   );
 
