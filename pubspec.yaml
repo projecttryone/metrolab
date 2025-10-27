@@ -1,0 +1,70 @@
+name: ecommerce_int2
+description: Test.
+
+# The following defines the version and build number for your application.
+version: 1.0.1+1
+
+environment:
+  sdk: ">=2.19.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.2.3
+  video_player: ^2.9.1
+
+
+
+  # Core Flutter packages
+  cupertino_icons: ^1.0.5
+  http: ^0.13.4
+  intl: ^0.18.0
+  path: ^1.8.3
+  sqflite: ^2.2.0+3
+
+  # UI & utility packages
+  card_swiper: ^2.0.4
+  flutter_staggered_grid_view: ^0.6.2
+  rubber: ^1.0.1
+  pin_code_text_field: ^1.8.0
+  flutter_rating_bar: ^4.0.0
+  numberpicker: ^2.1.2
+  flutter_svg: ^2.0.2
+  curved_navigation_bar: ^1.0.6
+  url_launcher: ^6.2.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  build_runner: ^2.0.4
+  json_serializable: ^6.6.1
+  flutter_launcher_icons: ^0.12.0
+
+flutter_icons:
+  # android: "launcher_icon"
+  android: true
+  ios: true
+  image_path: "assets/icons/Logos.png"
+
+flutter:
+  uses-material-design: true
+ 
+  assets:
+    # - assets/medapp.db
+    - assets/
+    - assets/icons/
+    - assets/offer/
+    - assets/medapp2.db
+    - assets/logo.mp4
+
+
+
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat-Regular.ttf
+    - family: NunitoSans
+      fonts:
+        - asset: fonts/NunitoSans-Regular.ttf
