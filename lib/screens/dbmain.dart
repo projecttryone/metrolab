@@ -96,6 +96,7 @@ static Future<List<Product>> fetchAllProducts({
   dynamic prop1 = '',
 }) async {
   final db = await DBHelper.instance.db;
+  print(catid);
 
   // Normalize prop1 for safer matching
   final String tag = (prop1 ?? '').toString().trim().toLowerCase();
@@ -149,6 +150,12 @@ String query = '''
       WHERE v2.product_id = p.id AND v2.product_field_id = 2
       ORDER BY v2.id DESC
       LIMIT 1)                   AS price,
+      -- price (field_id = 3): latest value
+    (SELECT v2.value
+       FROM product_field_values v2
+      WHERE v2.product_id = p.id AND v2.product_field_id = 3
+      ORDER BY v2.id DESC
+      LIMIT 1)                   AS pricedis,
 
     p.test_desc                  AS testDesc,
     p.test_method                AS testMethod,
@@ -168,11 +175,18 @@ String query = '''
   if (preventive == 1) conds.add('p.preventive_health_package = 1');
   if (highest    == 1) conds.add('p.bestseller = 1');
   if (newtest    == 1) conds.add('p.newproduct = 1');
+if (catid != null && catid != 0 && catid.toString().trim().isNotEmpty) {
+  query += '''
+    JOIN organ_test ot ON ot.test_id = p.id
+    AND ot.organ_id = ?
+  ''';
+  args.add(catid);
+}
 
-  if (catid != null && catid != 0 && catid.toString().trim().isNotEmpty) {
-    conds.add('p.category_id = ?');
-    args.add(catid);
-  }
+  // if (catid != null && catid != 0 && catid.toString().trim().isNotEmpty) {
+  //   conds.add('p.category_id = ?');
+  //   args.add(catid);
+  // }
 
   if (conds.isNotEmpty) {
     query += ' WHERE ' + conds.join(' AND ');
@@ -203,13 +217,22 @@ String query = '''
         : double.tryParse(testMethodNum?.toString() ?? '') ?? 0.0;
   // Product(this.image, this.name, this.description, this.price,this.id,this.test_method);
 
+ final testMethodNumdis = row['pricedis'];
+//     final testMethoddis = (testMethodNumdis is num)
+//         ? testMethodNumdis.toString() : 0.0 ;
+
+
+final testMethoddis = (testMethodNumdis is num)
+    ? testMethodNumdis.toString()
+    : (testMethodNumdis?.toString() ?? '');
+
     return Product(
       image,
       name,
       testDesc,
       testMethod,
       id,
-      '',
+      testMethoddis,
     );
   }).toList();
 }
@@ -259,6 +282,12 @@ String query = '''
       ORDER BY v2.id DESC
       LIMIT 1)                   AS price,
 
+        (SELECT v2.value
+       FROM product_field_values v2
+      WHERE v2.product_id = p.id AND v2.product_field_id = 3
+      ORDER BY v2.id DESC
+      LIMIT 1)                   AS disprice,
+
     p.test_desc                  AS testDesc,
     p.test_method                AS testMethod,
     p.newproduct                 AS newprod,
@@ -295,7 +324,9 @@ String query = '''
       id: row['id'].toString(),
       title: row['name']?.toString() ?? '',
       codeLabel: row['id'].toString(),
-      mrp: 0.0, // ⚡️replace when you have MRP column
+      mrp: row['disprice'] != null 
+          ? double.tryParse(row['disprice'].toString()) ?? 0.0 
+          : 0.0, // ⚡️replace when you have MRP column
       price: row['price'] != null 
           ? double.tryParse(row['price'].toString()) ?? 0.0 
           : 0.0,
@@ -372,6 +403,7 @@ static Future<int> fetchnooftest({required int catid}) async {
   //   'SELECT COUNT(child_product_id) as cnt FROM package_test WHERE product_id = ?',
   //   [catid],
   // );
+  //  print(catid) ;
    final result = await db.rawQuery(
     'SELECT COUNT(test_id) as cnt FROM organ_test WHERE organ_id = ?',
     [catid],
@@ -391,15 +423,21 @@ static Future<List<Map<String, dynamic>>> testrelated({required int catid}) asyn
   final db = await DBHelper.instance.db;
 
   // Step 1: get all child_product_ids for this product_id
+  // final childRows = await db.rawQuery(
+  //   'SELECT child_product_id FROM package_test WHERE product_id = ?',
+  //   [catid],
+  // );
+     print(catid) ;
+
+
   final childRows = await db.rawQuery(
-    'SELECT child_product_id FROM package_test WHERE product_id = ?',
+    'SELECT test_id FROM organ_test WHERE organ_id = ?',
     [catid],
   );
-
   if (childRows.isEmpty) return [];
 
   // Extract IDs into a list
-  final childIds = childRows.map((row) => row['child_product_id']).toList();
+  final childIds = childRows.map((row) => row['test_id']).toList();
 
   // Build placeholders (?, ?, ?)
   final placeholders = List.filled(childIds.length, '?').join(',');

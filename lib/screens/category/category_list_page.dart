@@ -1,11 +1,20 @@
-import 'dart:ffi';
-
+import 'dart:math';
 import 'package:ecommerce_int2/app_properties.dart';
 import 'package:ecommerce_int2/models/category.dart';
+import 'package:ecommerce_int2/screens/dbmain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'components/staggered_category_card.dart';
+
+Color _randomColor() {
+  final random = Random();
+  return Colors.primaries[random.nextInt(Colors.primaries.length)].shade200;
+}
+
+Color _randomColorDark() {
+  final random = Random();
+  return Colors.primaries[random.nextInt(Colors.primaries.length)].shade400;
+}
 
 class CategoryListPage extends StatefulWidget {
   @override
@@ -13,88 +22,35 @@ class CategoryListPage extends StatefulWidget {
 }
 
 class _CategoryListPageState extends State<CategoryListPage> {
-  // List<Category> categories = [
-  //   Category(
-  //     Color(0xffFCE183),
-  //     Color(0xffF68D7F),
-  //     'Gadgets',
-  //     'assets/jeans_5.png',
-  //   ),
-  //   Category(
-  //     Color(0xffF749A2),
-  //     Color(0xffFF7375),
-  //     'Clothes',
-  //     'assets/jeans_5.png',
-  //   ),
-  //   Category(
-  //     Color(0xff00E9DA),
-  //     Color(0xff5189EA),
-  //     'Fashion',
-  //     'assets/jeans_5.png',
-  //   ),
-  //   Category(
-  //     Color(0xffAF2D68),
-  //     Color(0xff632376),
-  //     'Home',
-  //     'assets/jeans_5.png',
-  //   ),
-  //   Category(
-  //     Color(0xff36E892),
-  //     Color(0xff33B2B9),
-  //     'Beauty',
-  //     'assets/jeans_5.png',
-  //   ),
-  //   Category(
-  //     Color(0xffF123C4),
-  //     Color(0xff668CEA),
-  //     'Appliances',
-  //     'assets/jeans_5.png',
-  //   ),
-  // ];
-
-
-List<Category> categories = [
-  Category(
-    Color(0xFFEF9A9A), // light red → red
-    Color(0xFFE57373),
-    'Blood Tests',
-    'assets/blood_tests.png',0 as int
-  ),
-  Category(
-    Color(0xFF90CAF9), // light blue → blue
-    Color(0xFF64B5F6),
-    'Cardiac Tests',
-    'assets/cardiac_tests.png',0 as int
-  ),
-  Category(
-    Color(0xFFCE93D8), // light purple → purple
-    Color(0xFFBA68C8),
-    'Imaging',
-    'assets/imaging_tests.png',0 as int
-  ),
-  Category(
-    Color(0xFF80CBC4), // light teal → teal
-    Color(0xFF4DB6AC),
-    'Hormone Panels',
-    'assets/hormone_panels.png',0 as int
-  ),
-  Category(
-    Color(0xFFFFF59D), // light yellow → golden
-    Color(0xFFFFF176),
-    'Allergy Tests',
-    'assets/allergy_tests.png',0 as int
-  ),
-  
-];
-
-
+  List<Category> categories = [];
   List<Category> searchResults = [];
   TextEditingController searchController = TextEditingController();
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    searchResults = categories;
+    _loadCategories();
+  }
+
+  Future<void> _loadCategories() async {
+    final dbList = await Dbmain.fetchLabPackagesparent(catid: 0);
+
+    final mapped = dbList.map((c) {
+      return Category(
+        _randomColor(),
+        _randomColorDark(),
+        c.name ?? '',
+         'assets/placeholder.png',
+        c.id ?? 0,
+      );
+    }).toList();
+
+    setState(() {
+      categories = mapped;
+      searchResults = List.from(mapped);
+      loading = false;
+    });
   }
 
   @override
@@ -105,7 +61,6 @@ List<Category> categories = [
         margin: const EdgeInsets.only(top: kToolbarHeight),
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Align(
               alignment: Alignment(-1, 0),
@@ -121,6 +76,8 @@ List<Category> categories = [
                 ),
               ),
             ),
+
+            // Search Field
             Container(
               padding: EdgeInsets.only(left: 16.0),
               decoration: BoxDecoration(
@@ -130,50 +87,50 @@ List<Category> categories = [
               child: TextField(
                 controller: searchController,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Search',
-                    prefixIcon: SvgPicture.asset(
-                      'assets/icons/search_icon.svg',
-                      fit: BoxFit.scaleDown,
-                    )),
+                  border: InputBorder.none,
+                  hintText: 'Search',
+                  prefixIcon: SvgPicture.asset(
+                    'assets/icons/search_icon.svg',
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
                 onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    List<Category> tempList = [];
-                    categories.forEach((category) {
-                      if (category.category.toLowerCase().contains(value)) {
-                        tempList.add(category);
-                      }
-                    });
-                    setState(() {
-                      searchResults.clear();
-                      searchResults.addAll(tempList);
-                    });
-                    return;
-                  } else {
-                    setState(() {
-                      searchResults.clear();
-                      searchResults.addAll(categories);
-                    });
-                  }
+                  value = value.toLowerCase();
+                  setState(() {
+                    if (value.isEmpty) {
+                      searchResults = List.from(categories);
+                    } else {
+                      searchResults = categories
+                          .where((cat) =>
+                              cat.category.toLowerCase().contains(value))
+                          .toList();
+                    }
+                  });
                 },
               ),
             ),
-            Flexible(
-              child: ListView.builder(
-                itemCount: searchResults.length,
-                itemBuilder: (_, index) => Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 16.0,
-                  ),
-                  child: StaggeredCardCard(
-                    begin: searchResults[index].begin,
-                    end: searchResults[index].end,
-                    categoryName: searchResults[index].category,
-                    assetPath: searchResults[index].image,
+
+            const SizedBox(height: 10),
+
+            // Loader
+            if (loading) CircularProgressIndicator(),
+
+            // Category List
+            if (!loading)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: searchResults.length,
+                  itemBuilder: (_, index) => Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: StaggeredCardCard(
+                      begin: searchResults[index].begin,
+                      end: searchResults[index].end,
+                      categoryName: searchResults[index].category,
+                      assetPath: searchResults[index].image,
+                    ),
                   ),
                 ),
               ),
-            )
           ],
         ),
       ),

@@ -83,6 +83,7 @@ class PackageDetailPage extends StatefulWidget {
 
 class _PackageDetailPageState extends State<PackageDetailPage> 
 {
+  
    late Future<List<LabPackage>> futurePackages;
   late Future<List<Map<String, dynamic>>> testrelated;
 
@@ -91,11 +92,13 @@ class _PackageDetailPageState extends State<PackageDetailPage>
       super.initState();
       _hydrateMainPackageOnly(); // replaces only _packages[packageId]
         testrelated = Dbmain.testrelated(catid: int.parse(widget.packageId));
-
+// print(testrelated);
     }
 
   Future<void> _hydrateMainPackageOnly() async {
   try {
+    // print("hydratemainpackageid") ;
+    // print(widget.packageId);
     // Fetch from DB (use your actual filter; catid:1 is just your current test)
     // final list = await Dbmain.fetchLabPackages(catid: widget.packageId);
 final list = await Dbmain.fetchLabPackages(
@@ -224,7 +227,7 @@ final suggestions = sugIds
 
                           // Navigate / show message after insert
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Added ${pkg.id} (x$memberCount) to cart')),
+                            SnackBar(content: Text('Added ${pkg.title} (x$memberCount) to cart')),
                           );
                         } catch (e) {
                           print("Error adding to cart: $e");
@@ -412,12 +415,26 @@ class _HeroPackageCard extends StatelessWidget {
                       constraints: const BoxConstraints(minWidth: 90),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(' ${currency.format(pkg.mrp)}',
-                              style: const TextStyle(color: Colors.black54, fontSize: 12, decoration: TextDecoration.lineThrough)),
-                          Text(' ${currency.format(pkg.price)}',
-                              style: const TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w800)),
-                        ],
+                      children: [
+  if ((pkg.mrp ?? 0) < (pkg.price ?? 0))
+    Text(
+      ' ${currency.format(pkg.mrp)}',
+      style: const TextStyle(
+        color: Colors.black54,
+        fontSize: 12,
+        decoration: TextDecoration.lineThrough,
+      ),
+    ),
+  Text(
+    ' ${currency.format(pkg.price)}',
+    style: const TextStyle(
+      color: Colors.black87,
+      fontSize: 18,
+      fontWeight: FontWeight.w800,
+    ),
+  ),
+],
+
                       ),
                     ),
                   ],

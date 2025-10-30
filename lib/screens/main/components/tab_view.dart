@@ -193,6 +193,7 @@ void initState() {
                     width: MediaQuery.of(context).size.width * 0.20,
                     child: Text(
                       c.name,
+                      //  "${c.id}",
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width * 0.025,
                         fontWeight: isSelected

@@ -69,6 +69,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin<MainP
 
     Future<void> _loadProducts() async {
     final list = await Dbmain.fetchAllProducts(); // your rawQuery join
+    // print(list) ;
     setState(() {
       _products2 = list;
       _isLoading = false;

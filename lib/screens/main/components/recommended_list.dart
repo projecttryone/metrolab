@@ -21,6 +21,7 @@ class RecommendedList extends StatefulWidget {
 
   });
 
+
   @override
   State<RecommendedList> createState() => _RecommendedListState();
 }
@@ -512,7 +513,9 @@ class _PackageCard extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
                     child: Row(
                       children: [
+                      
                         Text(
+                          
                           '₹ ${product.price.toStringAsFixed(0)}',
                           style: const TextStyle(
                             fontSize: 13,
@@ -521,18 +524,20 @@ class _PackageCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        if ((product.price ?? 0) > 0)
-                          Text(
-                            '₹ ${(product.price as num).toStringAsFixed(0)}',
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.black54,
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                       if ((double.tryParse(product.test_method.toString()) ?? 0.0) <
+                          (product.price))
+                        Text(
+                          '₹ ${product.test_method}',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
+                            decoration: TextDecoration.lineThrough,
                           ),
+                        ),
                       ],
                     ),
                   ),
+                  
 
                   // BOOK NOW button
                   Padding(
