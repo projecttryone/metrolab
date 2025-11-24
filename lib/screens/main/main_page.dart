@@ -76,228 +76,401 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin<MainP
     });
   }
 
-      @override
-      Widget build(BuildContext context) {
-      
-        // Widget appBar = Container(
-        //   // height: kToolbarHeight + MediaQuery.of(context).padding.top,
-        //    height: kToolbarHeight,
+  @override
+Widget build(BuildContext context) {
+  final Size size = MediaQuery.of(context).size;
 
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: <Widget>[
-        //       IconButton(
-        //           onPressed: () => Navigator.of(context)
-        //               .push(MaterialPageRoute(builder: (_) => NotificationsPage())),
-        //           icon: Icon(Icons.notifications)),
-        //       IconButton(
-        //           onPressed: () => Navigator.of(context)
-        //               .push(MaterialPageRoute(builder: (_) => SearchPage())),
-        //           icon: SvgPicture.asset('assets/icons/search_icon.svg'))
-        //     ],
-        //   ),
-        // );
+  // ---------- TOP BRAND BAR (logo + menu + icons) ----------
+  Widget brandBar = Padding(
+    padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.menu, color: Colors.black87),
+          onPressed: () {},
+        ),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/MHN-ICON.png', // full logo (with text if you want)
+                height: 26,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 2),
+              const Text(
+                'Tap. Test. Track. - Your health, digitized.',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Color(0xFF7C7C7C),
+                ),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications_none, color: Colors.black87),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => NotificationsPage()),
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.person_outline, color: Colors.black87),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ProfilePage()),
+            );
+          },
+        ),
+      ],
+    ),
+  );
 
-
-Widget appBar = Container(
-  width: double.infinity, // ✅ fit full width
-  height: 42,
-  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-  padding: const EdgeInsets.symmetric(horizontal: 12),
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(30),
-    border: Border.all(color: Colors.green.shade700, width: 1),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.05),
-        blurRadius: 6,
-        offset: const Offset(0, 3),
-      ),
-    ],
-  ),
-  child: Row(
-    children: [
-      Image.asset(
-        'assets/vlood_icon.png',
-        width: 24,
-        height: 24,
-      ),
-      const SizedBox(width: 10),
-      Expanded(
-        child: InkWell(
-          onTap: () => Navigator.of(context).push(
+  // ---------- SEARCH BAR ----------
+  Widget searchBar = Container(
+    width: double.infinity,
+    height: 46,
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(30),
+      border: Border.all(color: Colors.green.shade700, width: 1),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 6,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        Image.asset(
+          'assets/vlood_icon.png',
+          width: 24,
+          height: 24,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: InkWell(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => SearchPage()),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                "Search for Test/Package",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.mic_none, color: Colors.green),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.search, color: Colors.green),
+          onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (_) => SearchPage()),
           ),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              "Search for 'Blood Test'",
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-            ),
+        ),
+      ],
+    ),
+  );
+
+  // ---------- HERO TEXT (left of big card) ----------
+  Widget heroText = Padding(
+    padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text(
+          'Your Health is just a Tap Away',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: Color(0xFF1F6B47),
+            height: 1.2,
           ),
         ),
-      ),
-      IconButton(
-        icon: const Icon(Icons.search, color: Colors.green),
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => SearchPage()),
+        SizedBox(height: 4),
+        Text(
+          'On a Service 24 hours\nAlways on. Always Ready.',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+            height: 1.2,
+          ),
         ),
-      ),
-    ],
-  ),
-);
+        SizedBox(height: 6),
+        Text(
+          'From home sample collection to online reports access and complete laboratory diagnostic solutions.',
+          style: TextStyle(
+            fontSize: 11,
+            color: Color(0xFF5D5D5D),
+            height: 1.3,
+          ),
+        ),
+      ],
+    ),
+  );
 
-
-
-
-        /// ---- PILL-STYLE HEADER ----
-        Widget topHeader = Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 10.0, bottom: 8.0, top: 4.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(timelines.length, (index) {
-                bool isSelected = timelines[index] == selectedTimeline;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTimeline = timelines[index];
-                        // same logic for products
-                      if (index == 0) {
-                        // Weekly featured
-                        _products = _products2 ;
-                      } else if (index == 1) {
-                        // Best of June
-                        _products = [
-                          Product('assets/test1.png', 'Lipid Profile',
-                              'A detailed test measuring cholesterol and triglyceride levels to evaluate heart health.', 55.00,3336,''),
-                          Product('assets/test2.png', 'Thyroid Profile (T3, T4, TSH)',
-                              'Assesses thyroid gland function and helps diagnose hypo- or hyperthyroidism.', 75.00,4000,''),
-                          Product('assets/test3.png', 'Vitamin D Test',
-                              'Determines Vitamin D levels in the body to check for deficiencies that may affect bone and immune health.', 50.00,3337,''),
-                        ];
-                      } else {
-                        // Best of 2018
-                        _products = [
-                          Product('assets/test4.png', 'COVID-19 RT-PCR Test',
-                              'A highly accurate diagnostic test to detect the presence of SARS-CoV-2 using a nasal swab sample.', 80.00,3338,''),
-                          Product('assets/test2.png', 'Hemoglobin (Hb) Test',
-                              'Measures hemoglobin levels in the blood, useful for diagnosing anemia and other blood disorders.', 40.00,3339,''),
-                          Product('assets/test3.png', 'Albumin Blood Test',
-                              'Checks the albumin protein levels in the blood to help assess liver and kidney function.', 55.00,3340,''),
-                        ];
-                      }
-
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      padding: EdgeInsets.symmetric(vertical: 2),
-                      margin: EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: isSelected ? const Color.fromARGB(255, 5, 74, 17) : Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Center(
-                        child: Text(
-                          timelines[index],
-                          style: TextStyle(
-                            fontSize: isSelected ? 14 : 10,
-                            color: isSelected ? Colors.white : Colors.black87,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          ),
-                        ),
+  // ---------- BIG WHITE CARD: doctor banner + dots + 2 green CTAs ----------
+// BIG WHITE CARD: text + doctor image (side by side) + dots + 2 CTAs
+Widget heroOfferCard = Padding(
+  padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+  child: Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(26),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.08),
+          blurRadius: 16,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // --- TOP ROW: TEXT (LEFT) + IMAGE (RIGHT) ---
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // text
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Your Health is just a Tap Away',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1F6B47),
+                        height: 1.2,
                       ),
                     ),
-                  ),
-                );
-              }),
-            ),
-          ),
-        );
-
-        Widget tabBar = TabBar(
-          tabs: [
-            Tab(text: 'ALL'),
-            Tab(text: 'Highest selling'),
-            Tab(text: 'Preventive'),
-            Tab(text: 'New Tests'),
-            // Tab(text: 'Liver'),
-            //  Tab(text: 'blood'),
-          ],
-          labelStyle: TextStyle(fontSize: 16.0),
-          unselectedLabelStyle: TextStyle(fontSize: 14.0),
-          labelColor: darkGrey,
-          unselectedLabelColor: Color.fromRGBO(0, 0, 0, 0.5),
-          isScrollable: true,
-          controller: tabController,
-         );
-
-   
-
-return Scaffold(
-  bottomNavigationBar: CustomBottomBar(controller: bottomTabController),
-  body: CustomPaint(
-    painter: MainBackground(),
-    child: TabBarView(
-      controller: bottomTabController,
-      physics: const NeverScrollableScrollPhysics(),
-      children: <Widget>[
-        // -------- Tab 1 (no vertical scroll/bounce) --------
-        SafeArea(
-          child: Column(
-            children: [
-              appBar,
-
-              // keep your banner static (not scrollable)
-             OfferCardSection(
-              offers: [
-                Offer(imagePath: 'assets/offer/card4.png', discount: 'Up to 20% off', title: 'Highest Selling'),
-                Offer(imagePath: 'assets/offer/card2.png', discount: 'Up to 15% off', title: 'Preventive'),
-                Offer(imagePath: 'assets/offer/card3.png', discount: 'Up to 25% off', title: 'New Tests'),
-              ],
-              tabController: tabController,
-              
-            ),
-
-
-              // your tab bar below the banner
-              tabBar,
-
-              // tabs content fills remaining height, with no bounce
-              Expanded(
-                // child: ScrollConfiguration(
-                  // behavior: const NoBounceScrollBehavior(),
-                  child: TabView(tabController: tabController),
+                    SizedBox(height: 4),
+                    Text(
+                      'On a Service 24 hours\nAlways on. Always Ready.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                        height: 1.2,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      'From home sample collection to online reports access and complete laboratory diagnostic solutions.',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        color: Color(0xFF5D5D5D),
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
                 ),
-              // ),
+              ),
+              const SizedBox(width: 8),
+              // doctor image
+              Expanded(
+                flex: 2,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: AspectRatio(
+                    aspectRatio: 1, // nice square-ish
+                    child: Image.asset(
+                      'assets/offer/banner1.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
 
-        // -------- Other tabs unchanged --------
-        CategoryListPage(),
-             CallPage(phoneNumber: '+9779860103441'), // 🚀 launches immediately
+        // --- DOTS ---
+        const SizedBox(height: 6),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: const Color(0xFF2BB673),
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD5E5D8),
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD5E5D8),
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          ],
+        ),
 
+        const SizedBox(height: 10),
 
-        CheckOutPage(),
-        OrdersPage(),
-          ProfilePage(),
+        // --- TWO GREEN CTA CARDS ---
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 14),
+          child: Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => tabController.animateTo(1),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.asset(
+                      'assets/offer/cta-2.png',
+                      height: 72,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => tabController.animateTo(2),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.asset(
+                      'assets/offer/cta1.png',
+                      height: 72,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     ),
   ),
 );
 
+  // ---------- SECTION HEADER ----------
+  Widget sectionHeader(String title, {bool showSeeAll = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          if (showSeeAll)
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(40, 24),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: const Text(
+                'See all',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF1F6B47),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- TAB BAR FOR POPULAR LAB TESTS ----------
+  Widget tabBar = TabBar(
+    tabs: const [
+      Tab(text: 'ALL'),
+      Tab(text: 'Highest selling'),
+      Tab(text: 'Preventive'),
+      Tab(text: 'New Tests'),
+    ],
+    labelStyle: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
+    unselectedLabelStyle: const TextStyle(fontSize: 13.0),
+    labelColor: darkGrey,
+    unselectedLabelColor: const Color.fromRGBO(0, 0, 0, 0.5),
+    isScrollable: true,
+    controller: tabController,
+  );
+
+  return Scaffold(
+    bottomNavigationBar: SafeArea(
+      top: false,
+      child: SizedBox(
+        height: 72,
+        child: CustomBottomBar(controller: bottomTabController),
+      ),
+    ),
+    body: CustomPaint(
+      painter: MainBackground(),
+      child: TabBarView(
+        controller: bottomTabController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          // ================== HOME TAB ==================
+      SafeArea(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      brandBar,
+      searchBar,
+      heroOfferCard, // text + image now inside here
+      sectionHeader('Popular lab tests', showSeeAll: true),
+      tabBar,
+      Expanded(
+        child: TabView(tabController: tabController),
+      ),
+    ],
+  ),
+),
 
 
-      }
-    }
-
+          // other bottom tabs unchanged
+          CategoryListPage(),
+          CallPage(phoneNumber: '+9779860103441'),
+          CheckOutPage(),
+          OrdersPage(),
+          ProfilePage(),
+        ],
+      ),
+    ),
+  );
+}
+}

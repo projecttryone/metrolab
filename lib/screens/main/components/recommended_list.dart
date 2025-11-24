@@ -518,9 +518,10 @@ class _PackageCard extends StatelessWidget {
                           
                           '₹ ${product.price.toStringAsFixed(0)}',
                           style: const TextStyle(
-                            fontSize: 13,
+                            fontSize: 11,
                             fontWeight: FontWeight.w900,
                             color: Color(0xFF0E3B0C),
+
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -529,9 +530,11 @@ class _PackageCard extends StatelessWidget {
                         Text(
                           '₹ ${product.test_method}',
                           style: const TextStyle(
-                            fontSize: 11,
+                            fontSize: 13,
                             color: Colors.black54,
                             decoration: TextDecoration.lineThrough,
+
+
                           ),
                         ),
                       ],

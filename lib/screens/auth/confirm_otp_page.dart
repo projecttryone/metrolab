@@ -100,8 +100,35 @@ print('Saved local customer with id = $localId');
 
   @override
   Widget build(BuildContext context) {
+      final height = MediaQuery.of(context).size.height * 0.42;
+
+   Widget upperlogo =  
+   
+  Center(child:Container(
+    height: height/2,
+    width: MediaQuery.of(context).size.width * 0.6,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/MHN-ICON.png'),
+        fit: BoxFit.contain,
+      ),
+    ),
+    
+  ),);
+   Widget lowerlogo =  Center(
+   child:Container(
+    height: height/5,
+    width: MediaQuery.of(context).size.width * 0.4,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/logobottom.png'),
+        fit: BoxFit.contain,
+      ),
+    ),
+    
+  ),);
     Widget title = Text(
-      'Confirm your OTP',
+      'Verify your account',
       style: TextStyle(
           color: const Color.fromARGB(255, 73, 66, 66),
           fontSize: 34.0,
@@ -118,7 +145,7 @@ print('Saved local customer with id = $localId');
     Widget subTitle = Padding(
         padding: const EdgeInsets.only(right: 56.0),
         child: Text(
-          'Please wait, we are confirming your OTP '+phone +'  '+ _currentOtp,
+          'Enter OTP sent to  '+phone +'  '+ _currentOtp,
           style: TextStyle(
             color: const Color.fromARGB(255, 31, 30, 30),
             fontSize: 16.0,
@@ -203,19 +230,20 @@ print('Saved local customer with id = $localId');
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          "Go Back Resend again",
+          "Didn't receive code ?   ",
           style: TextStyle(
             fontStyle: FontStyle.italic,
-            color: Color.fromRGBO(255, 255, 255, 0.5),
+            color: Color.fromRGBO(25, 24, 24, 0.494),
             fontSize: 14.0,
           ),
         ),
         InkWell(
-          onTap: () {},
+          onTap: () {  Navigator.pop(context);
+},
           child: Text(
-            '',
+            'Resend OTP ',
             style: TextStyle(
-              color: Colors.white,
+              color: const Color.fromARGB(255, 17, 16, 16),
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
             ),
@@ -226,71 +254,72 @@ print('Saved local customer with id = $localId');
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
-      child: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/bck.png'), fit: BoxFit.cover)),
-        child: Container(
-          decoration: BoxDecoration(color: const Color.fromARGB(179, 167, 29, 29)),
-          child: Scaffold(
-                 backgroundColor: const Color.fromARGB(255,  167, 221, 186),
-
-            appBar: AppBar(
-              backgroundColor: const Color.fromARGB(255,  167, 220, 186),
-              elevation: 0.0,
-            ),
-            body: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 28.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Spacer(flex: 3),
-                      title,
-                      Spacer(),
-                      subTitle,
-                      Spacer(flex: 1),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 28.0),
-                        child: Center(
-                          child: PinCodeTextField(
-                            controller:  _pinController,
-                            highlightColor: Colors.white,
-                            highlightAnimation: true,
-                            highlightAnimationBeginColor: Colors.white,
-                            highlightAnimationEndColor: Theme.of(context).primaryColor,
-                            pinTextAnimatedSwitcherDuration: Duration(milliseconds: 500),
-                            wrapAlignment: WrapAlignment.center,
-                            hasTextBorderColor: Colors.transparent,
-                            highlightPinBoxColor: Colors.white,
-                            autofocus: true,
-                            pinBoxHeight: 60,
-                            pinBoxWidth: 60,
-                            pinBoxRadius: 5,
-                            defaultBorderColor: Colors.transparent,
-                            pinBoxColor: Color.fromRGBO(255, 255, 255, 0.8),
-                            maxLength: 4,
-                          ),
-                        ),
-                      ),
-                      Spacer(flex: 1),
-            //                      otpCode,
-                      Padding(
-                        padding: const EdgeInsets.only(right: 28.0),
-                        child: verifyButton,
-                      ),
-                      Spacer(flex: 2),
-                      resendText,
-                      Spacer()
-                    ],
+    child: Container(
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('assets/bgmain.png'),
+      fit: BoxFit.cover,
+    ),
+  ),
+  child: Scaffold(
+    backgroundColor: Colors.transparent, // Make scaffold transparent to see background
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+    ),
+    body: Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 28.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              upperlogo,
+              // Spacer(flex: 3),
+              title,
+              Spacer(),
+              subTitle,
+              Spacer(flex: 1),
+              Padding(
+                padding: const EdgeInsets.only(right: 28.0),
+                child: Center(
+                  child: PinCodeTextField(
+                    controller: _pinController,
+                    highlightColor: Colors.white,
+                    highlightAnimation: true,
+                    highlightAnimationBeginColor: Colors.white,
+                    highlightAnimationEndColor: Theme.of(context).primaryColor,
+                    pinTextAnimatedSwitcherDuration: Duration(milliseconds: 500),
+                    wrapAlignment: WrapAlignment.center,
+                    hasTextBorderColor: Colors.transparent,
+                    highlightPinBoxColor: Colors.white,
+                    autofocus: true,
+                    pinBoxHeight: 60,
+                    pinBoxWidth: 60,
+                    pinBoxRadius: 5,
+                    defaultBorderColor: Colors.transparent,
+                    pinBoxColor: Color.fromRGBO(255, 255, 255, 0.8),
+                    maxLength: 4,
                   ),
-                )
-              ],
-            ),
+                ),
+              ),
+              Spacer(flex: 1),
+              Padding(
+                padding: const EdgeInsets.only(right: 28.0),
+                child: verifyButton,
+              ),
+              Spacer(flex: 2),
+                resendText,
+              
+              lowerlogo,
+            
+              Spacer()
+            ],
           ),
-        ),
-      ),
-    );
+        )
+      ],
+    ),
+  ),
+),  );
   }
 }

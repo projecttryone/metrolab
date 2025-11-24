@@ -3,6 +3,8 @@ import 'package:ecommerce_int2/models/labpackage.dart';
 import 'package:ecommerce_int2/models/product.dart';
 import 'package:flutter/material.dart';
 import '../../dbmain.dart';
+import 'package:ecommerce_int2/screens/shop/check_out_page.dart';
+import 'package:ecommerce_int2/screens/search_page.dart';
 
 // ===== Fake Data (replace with SQL later) =====
 
@@ -229,6 +231,15 @@ final suggestions = sugIds
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Added ${pkg.title} (x$memberCount) to cart')),
                           );
+// Wait until snackbar finishes, then navigate
+Future.delayed(const Duration(milliseconds:300 ), () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CheckOutPage(),
+    ),
+  );
+});
                         } catch (e) {
                           print("Error adding to cart: $e");
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -327,6 +338,21 @@ class _SearchBar extends StatelessWidget {
             borderSide: const BorderSide(color: _brandGreen, width: 1.4),
           ),
         ),
+        // onTap: () => Navigator.of(context).push(
+        //     MaterialPageRoute(builder: (_) => SearchPage()),
+        //   ),
+onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SearchPage(),
+    ),
+  );
+},
+
+
+
+
       ),
     );
   }
@@ -418,7 +444,7 @@ class _HeroPackageCard extends StatelessWidget {
                       children: [
   if ((pkg.mrp ?? 0) < (pkg.price ?? 0))
     Text(
-      ' ${currency.format(pkg.mrp)}',
+      ' ${currency.format(pkg.price)}',
       style: const TextStyle(
         color: Colors.black54,
         fontSize: 12,
@@ -426,7 +452,7 @@ class _HeroPackageCard extends StatelessWidget {
       ),
     ),
   Text(
-    ' ${currency.format(pkg.price)}',
+    ' ${currency.format(pkg.mrp)}',
     style: const TextStyle(
       color: Colors.black87,
       fontSize: 18,

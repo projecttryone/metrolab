@@ -54,12 +54,17 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
         p.id     AS id,
         p.url_code     AS image,
         pfv.value       AS name,
+                pfv2.value       AS price,
+
         p.test_desc     AS testDesc,
         p.test_method   AS testMethod
       FROM products p
       LEFT JOIN product_field_values pfv
         ON p.id = pfv.product_id
        AND pfv.product_field_id = 1
+            LEFT JOIN product_field_values pfv2
+        ON p.id = pfv2.product_id
+       AND pfv2.product_field_id = 2
     ''');
 
     //   Future<List<Product>> fetchAllProducts() async {
@@ -81,8 +86,9 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       final rawImage = (r['image'] as String?).isNullOrEmpty
         ? 'assets/placeholder.png'
         : r['image'] as String;
-          final rawPrice = r['price'] as num?;
+          // final rawPrice = r['price'] as num?;
 
+final rawPrice = double.tryParse(r['price']?.toString() ?? '') ?? 0.0;
           final price = rawPrice?.toDouble() ?? 0.0;
 
 

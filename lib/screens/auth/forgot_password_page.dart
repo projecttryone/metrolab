@@ -281,8 +281,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         child: Stack(
           children: [
             // Background
-            Positioned.fill(
-              child: Image.asset('assets/bck.png', fit: BoxFit.cover),
+            // Positioned.fill(
+            //   child: Image.asset('assets/bgmain.png', fit: BoxFit.cover),
+            // ),
+            Stack(
+              children: [
+                // Background image (full screen)
+                Positioned.fill(
+                  child: Image.asset('assets/bgmain.png', fit: BoxFit.fill),
+                ),
+                
+                // Foreground half image with design
+                Positioned.fill(
+      top: MediaQuery.of(context).size.height * 0.3, // Start at 50% height
+                        left: 0,
+                        right: 0,
+                  child: Image.asset('assets/bg.png', fit: BoxFit.cover),
+                ),
+              ],
             ),
             Positioned.fill(child: Container(color: transparentYellow)),
 
@@ -332,59 +348,79 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   /// Top Carousel Section
-  Widget _buildCarouselSection(BuildContext context) {
-    final height = MediaQuery.of(context).size.height * 0.42;
-    return Container(
-      height: height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: (index) => setState(() => _currentPage = index),
-              itemCount: slides.length,
-              itemBuilder: (_, index) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    flex: 3,
-                    child: Image.asset(slides[index]["image"]!, height: 180),
-                  ),
-                  SizedBox(height: 16),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Text(
-                      slides[index]["text"]!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(slides.length, (index) {
-              return AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                margin: EdgeInsets.symmetric(horizontal: 4),
-                height: 8,
-                width: _currentPage == index ? 20 : 8,
-                decoration: BoxDecoration(
-                  color: _currentPage == index ? Colors.orange : Colors.white54,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              );
-            }),
-          ),
-          SizedBox(height: 12),
-        ],
+  // Widget _buildCarouselSection(BuildContext context) {
+  //   final height = MediaQuery.of(context).size.height * 0.42;
+  //   return Container(
+  //     height: height,
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Expanded(
+  //           child: PageView.builder(
+  //             controller: _pageController,
+  //             onPageChanged: (index) => setState(() => _currentPage = index),
+  //             itemCount: slides.length,
+  //             itemBuilder: (_, index) => Column(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Flexible(
+  //                   flex: 3,
+  //                   child: Image.asset(slides[index]["image"]!, height: 180),
+  //                 ),
+  //                 SizedBox(height: 16),
+  //                 Padding(
+  //                   padding: EdgeInsets.symmetric(horizontal: 24.0),
+  //                   child: Text(
+  //                     slides[index]["text"]!,
+  //                     textAlign: TextAlign.center,
+  //                     style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         SizedBox(height: 15),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: List.generate(slides.length, (index) {
+  //             return AnimatedContainer(
+  //               duration: Duration(milliseconds: 300),
+  //               margin: EdgeInsets.symmetric(horizontal: 4),
+  //               height: 8,
+  //               width: _currentPage == index ? 20 : 8,
+  //               decoration: BoxDecoration(
+  //                 color: _currentPage == index ? Colors.orange : Colors.white54,
+  //                 borderRadius: BorderRadius.circular(12),
+  //               ),
+  //             );
+  //           }),
+  //         ),
+  //         SizedBox(height: 15),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+Widget _buildCarouselSection(BuildContext context) {
+  final height = MediaQuery.of(context).size.height * 0.42;
+  
+return Center(
+  child: Container(
+    height: height,
+    width: MediaQuery.of(context).size.width * 0.8,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/MHN-ICON.png'),
+        fit: BoxFit.contain,
       ),
-    );
-  }
+    ),
+    
+  ),
+  
+);
+}
+
 
   /// Phone Number Form
   Widget _buildPhoneForm(BuildContext context) {
@@ -415,7 +451,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ],
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 30),
+                SizedBox(height: 30),
+        SizedBox(height: 30),
+        SizedBox(height: 30),
+        SizedBox(height: 30),
+
         InkWell(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
@@ -432,7 +473,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color.fromARGB(255, 55, 120, 83), Color.fromARGB(255, 55, 120, 83), Color.fromARGB(255, 55, 120, 83)],
+                colors: [Color.fromARGB(255, 159, 192, 50), Color.fromARGB(255, 159, 192, 50), Color.fromARGB(255, 159, 192, 50)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -450,23 +491,43 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   /// Footer Text with Wrap to prevent overflow
   Widget _buildResendText() {
+        final width = MediaQuery.of(context).size.width;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
       child: Wrap(
         alignment: WrapAlignment.center,
         spacing: 6,
         children: [
-          Text("By signing in, you accept our ",
-              style: TextStyle(fontSize: 10, color: Colors.black54)),
-          GestureDetector(
-            child: Text("T&Cs",
-                style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-          ),
-          Text(" and ", style: TextStyle(fontSize: 8, color: Colors.black54)),
-          GestureDetector(
-            child: Text("Privacy Policy",
-                style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-          ),
+         Column(
+  children: [
+     Row(
+      children: [
+        // Text("By signing in, you accept our ",
+            // style: TextStyle(fontSize: 10, color: Colors.black54)),
+        // GestureDetector(
+          // child: Text("T&Cs",
+              // style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+        // ),
+        // Text(" and ", style: TextStyle(fontSize: 8, color: Colors.black54)),
+        // GestureDetector(
+          // child: Text("Privacy Policy",
+              // style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+        // ),
+      ],
+    ),
+         SizedBox(height: 30),
+        SizedBox(height: 30),
+
+    Image.asset(
+      'assets/logobottom.png',
+      height: 40, // Adjust size as needed
+      width: width/2,
+    ),
+    SizedBox(height: 8),
+   
+  ],
+)
         ],
       ),
     );

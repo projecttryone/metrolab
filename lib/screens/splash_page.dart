@@ -1,106 +1,3 @@
-// import 'package:ecommerce_int2/app_properties.dart';
-// import 'package:ecommerce_int2/screens/auth/welcome_back_page.dart';
-// import 'package:ecommerce_int2/screens/auth/forgot_password_page.dart';
-// import 'package:ecommerce_int2/screens/intro_page.dart';
-
-// import 'package:flutter/material.dart';
-// import 'cache_storage.dart' ;
-// import 'package:video_player/video_player.dart';
-
-// class SplashScreen extends StatefulWidget {
-  
-//   @override
-//   _SplashScreenState createState() => _SplashScreenState();
-
-// }
-
-// class _SplashScreenState extends State<SplashScreen>
-//     with SingleTickerProviderStateMixin {
-//   late Animation<double> opacity;
-//   late AnimationController controller;
-
-//   @override
-//   void initState() {
-
-//     super.initState();
-//     controller = AnimationController(
-//         duration: Duration(milliseconds: 2500), vsync: this);
-//         opacity = Tween<double>(begin: 1.0, end: 0.0).animate(controller)
-//       ..addListener(() {
-//         setState(() {});
-//       });
-//     controller.forward().then((_) {
-//       navigationPage();
-//     });
-//   }
-
-  
-
-//   @override
-//   void dispose() {
-//     controller.dispose();
-//     super.dispose();
-//   }
-
-//   // void navigationPage() {
-//   //   Navigator.of(context)
-//   //       .pushReplacement(MaterialPageRoute(builder: (_) => ForgotPasswordPage()));
-//   // }
-//     void navigationPage() async {
-//             //  await CacheStorage.logout();
-
-//     bool isLoggedIn = await CacheStorage.isLoggedIn();
-//     print('Is user logged in? $isLoggedIn');
-
-//     if (isLoggedIn) {
-//       Navigator.of(context).pushReplacement(
-//         MaterialPageRoute(builder: (_) => IntroPage()),
-//       );
-//     } else {
-//       Navigator.of(context).pushReplacement(
-//         MaterialPageRoute(builder: (_) => ForgotPasswordPage()),
-//       );
-//     }
-//   }
-
-
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//           image: DecorationImage(
-//               image: AssetImage('assets/bck.png'), fit: BoxFit.cover)),
-//       child: Container(
-//         decoration: BoxDecoration(color: const Color.fromARGB(252, 255, 255, 255)),
-//         child: SafeArea(
-//           child: new Scaffold(
-//             body: Column(
-//               children: <Widget>[
-//                 Expanded(
-//                   child: Opacity(
-//                       opacity: opacity.value,
-//                       child: new Image.asset('assets/logo.jpeg')),
-//                 ),
-//                 Padding(
-//                   padding: const EdgeInsets.all(8.0),
-//                   child: RichText(
-//                     text: TextSpan(
-//                         style: TextStyle(color: Colors.black),
-//                         children: [
-//                           TextSpan(text: 'Powered by '),
-//                           TextSpan(
-//                               text: 'Axis Software Solutions',
-//                               style: TextStyle(fontWeight: FontWeight.bold))
-//                         ]),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 import 'package:ecommerce_int2/app_properties.dart';
 import 'package:ecommerce_int2/screens/auth/welcome_back_page.dart';
@@ -187,55 +84,58 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isVideoReady = _videoCtrl?.value.isInitialized ?? false;
 
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/bck.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(252, 255, 255, 255),
-        ),
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Column(
-              children: <Widget>[
-               Expanded(
-  child: (_videoCtrl?.value.isInitialized ?? false)
-      ? AspectRatio(
-          aspectRatio: _videoCtrl!.value.aspectRatio,
-          child: VideoPlayer(_videoCtrl!),
-        )
-      : const Center(child: CircularProgressIndicator()),
-),
+@override
+Widget build(BuildContext context) {
+  final ready = _videoCtrl?.value.isInitialized ?? false;
 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: RichText(
-                    text: const TextSpan(
-                      style: TextStyle(color: Colors.black),
-                      children: [
-                        TextSpan(text: 'Powered by '),
-                        TextSpan(
-                          text: 'Axis Software Solutions',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
+  return Scaffold(
+    backgroundColor: Colors.black,
+    // no SafeArea here – we want true edge-to-edge
+    body: Stack(
+      fit: StackFit.expand, // fill the screen
+      children: [
+        // Background image (optional)
+        Image.asset('assets/bck.png', fit: BoxFit.cover),
+
+        // Video full-bleed
+        if (ready)
+          Positioned.fill(
+            child: Transform.scale(
+              scale: 1.01, // nudge to hide any 1px gap due to rounding
+              child: FittedBox(
+                fit: BoxFit.cover, // fill; will crop a bit
+                child: SizedBox(
+                  width: _videoCtrl!.value.size.width,
+                  height: _videoCtrl!.value.size.height,
+                  child: VideoPlayer(_videoCtrl!),
+                ),
+              ),
+            ),
+          )
+        else
+          const Center(child: CircularProgressIndicator()),
+
+        // Footer label
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: RichText(
+              text: const TextSpan(
+                style: TextStyle(color: Colors.white),
+                children: [
+                  TextSpan(text: 'Powered by '),
+                  TextSpan(text: 'Axis Software Solutions',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
 }
+
+    }
